@@ -81,7 +81,6 @@
     dropdown.classList.toggle("show");
   }
     // Only load Lightning component if not already loaded
-    if (document.getElementById("lightningComponentLoaded") === null && dropdown.classList.contains("show")) {
       $Lightning.use(
         'c:LightningOutDependencyApp',
         function () {
@@ -98,7 +97,7 @@
         },
         'https://icevonline.my.site.com/HelpCenter/s/'
       );
-    }
+    
   
 </script>
   </body>
