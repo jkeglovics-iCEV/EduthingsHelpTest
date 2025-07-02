@@ -75,40 +75,31 @@
     </ul>
 
     <script src="https://icevonline--full.sandbox.lightning.force.com/lightning/lightning.out.js"></script>
-    <script>
-      function toggleDropdown() {
-        document.getElementById("myDropdown").classList.toggle("show");
-      }
+<script>
+  function toggleDropdown() {
+    const dropdown = document.getElementById("myDropdown");
+    dropdown.classList.toggle("show");
 
-      /*const queryString = window.location.search;
-      const urlParams = new URLSearchParams(queryString);
-      const userId = urlParams.get('userId')
-      console.log('Html page: ' + userId);*/
-
-      /*window.onclick = function(event) {
-        // If the clicked element is not inside the dropdown
-        const dropdown = document.querySelector('.dropdown');
-        if (!dropdown.contains(event.target)) {
-          document.getElementById("myDropdown").classList.remove("show");
-        }
-      }*/
-      
+    // Only load Lightning component if not already loaded
+    if (document.getElementById("lightningComponentLoaded") === null && dropdown.classList.contains("show")) {
       $Lightning.use(
-        'c:LightningOutDependencyApp', // name of the Lightning app
+        'c:LightningOutDependencyApp',
         function () {
-          // Callback once framework and app loaded
           $Lightning.createComponent(
-            'c:flowWrapper', // top-level component of your app
+            'c:flowWrapper',
             {},
-            //{userId: (userId)}, // attributes to set on the component when created, passed to the lwc as @api
-            'lightningout', // the DOM location to insert the component
+            'lightningout',
             function (cmp) {
-              // callback when component is created and active on the page
+              const marker = document.createElement('div');
+              marker.id = "lightningComponentLoaded";
+              document.getElementById("lightningout").appendChild(marker);
             }
           );
         },
-        'https://icevonline--full.sandbox.my.site.com/eduthings' // Site endpoint
+        'https://icevonline--full.sandbox.my.site.com/eduthings'
       );
-    </script>
+    }
+  }
+</script>
   </body>
 </html>
