@@ -93,22 +93,65 @@
         }
       }*/
       
-      $Lightning.use(
-        'c:LightningOutDependencyApp', // name of the Lightning app
-        function () {
-          // Callback once framework and app loaded
-          $Lightning.createComponent(
-            'c:flowWrapper', // top-level component of your app
-            {},
-            //{userId: (userId)}, // attributes to set on the component when created, passed to the lwc as @api
-            'lightningout', // the DOM location to insert the component
-            function (cmp) {
-              // callback when component is created and active on the page
-            }
-          );
-        },
-        'https://icevonline.my.site.com/HelpCenter'
-      );
+ function hideCustomField(){
+  const config = { attributes: true, childList: true, subtree: true };
+  const callback = (mutationList, observer) => {
+   var webWidget = document.getElementById('webWidget');
+   if(webWidget !== null){
+    const parser = new DOMParser();
+    const doc = parser.parseFromString('<style>div:has(> input[name="key:32134460057236"]) { display: none; } </style>', 'text/html');
+    const styleNode = doc.getElementsByTagName('style')[0];
+    webWidget.contentDocument.head.appendChild(styleNode);
+   }
+  }
+  const observer = new MutationObserver(callback);
+  observer.observe(document, config);
+ }
+ hideCustomField();
+ setTimeout(function(){
+  let element = document.getElementById('launcher');
+  if (element) {
+   element.classList.add('d-print-none');
+  }
+ }, 250);
+</script>
+<!-- End of eduthings Zendesk Widget script -->
+<!-- Start of sales force widget script -->
+<script src="https://icevonline.lightning.force.com/lightning/lightning.out.js"></script>
+<script>
+ // const url = "https://icevonline.my.site.com/HelpCenter?districtUrl=<%= @district ? district_switcher_url(@district.id) : '' %>";
+ const url = "https://icevonline.my.site.com/HelpCenter?districtUrl=<%= @district ? ERB::Util.url_encode(district_switcher_url(@district.id)) : '' %>";
+ console.log(url)
+ document.addEventListener('DOMContentLoaded', function() {
+  function mountLightningComponent() {
+   $Lightning.use(
+    'c:LightningOutDependencyApp',
+    function () {
+     $Lightning.createComponent(
+      'c:flowWrapper',
+      {districtURL: "<%= @district ? district_switcher_url(@district.id) : '' %>"},
+      'lightningout',
+      function (cmp) {
+        // callback when component is created and active on the page
+       console.log(url)
+      }
+     );
+    },
+    url
+   );
+  }
+   // If $Lightning is already loaded, mount immediately; otherwise, wait for script load
+  if (window.$Lightning) {
+   mountLightningComponent();
+  } else {
+   var script = document.createElement('script');
+   script.src = 'https://icevonline.lightning.force.com/lightning/lightning.out.js';
+   script.onload = function() {
+    mountLightningComponent();
+   };
+   document.body.appendChild(script);
+  }
+ });
 </script>
   </body>
 </html>
